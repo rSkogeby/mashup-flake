@@ -12,16 +12,15 @@ from instance.config import getGoogleAPIKey
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 sys.stderr = codecs.getwriter('utf8')(sys.stderr)
 
-
-
 foursquare_client_id = getFoursquareClientId()
 foursquare_client_secret = getFoursquareClientSecret()
 google_api_key = getGoogleAPIKey()
 
+
 def getGeocodeLocation(inputString):
     #Replace Spaces with '+' in URL
     locationString = inputString.replace(" ", "+")
-    url = ('https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s'% (locationString, google_api_key))
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}'.format(locationString, google_api_key)
     h = httplib2.Http()
     result = json.loads(h.request(url,'GET')[1])
     #print response
@@ -32,7 +31,7 @@ def getGeocodeLocation(inputString):
 #This function takes in a string representation of a location and cuisine type, geocodes the location, and then pass in the latitude and longitude coordinates to the Foursquare API
 def findARestaurant(mealType, location):
     latitude, longitude = getGeocodeLocation(location)
-    url = ('https://api.foursquare.com/v2/venues/search?client_id=%s&client_secret=%s&v=20130815&ll=%s,%s&query=%s' % (foursquare_client_id, foursquare_client_secret,latitude,longitude,mealType))
+    url = 'https://api.foursquare.com/v2/venues/search?client_id={}&client_secret={}&v=20130815&ll={},{}&query={}'.format(foursquare_client_id, foursquare_client_secret,latitude,longitude,mealType)
     h = httplib2.Http()
     result = json.loads(h.request(url,'GET')[1])
     if result['response']['venues']:
@@ -48,7 +47,7 @@ def findARestaurant(mealType, location):
         restaurant_address = address
         
         #Get a  300x300 picture of the restaurant using the venue_id (you can change this by altering the 300x300 value in the URL or replacing it with 'orginal' to get the original picture
-        url = ('https://api.foursquare.com/v2/venues/%s/photos?client_id=%s&v=20150603&client_secret=%s' % ((venue_id,foursquare_client_id,foursquare_client_secret)))
+        url = 'https://api.foursquare.com/v2/venues/{}/photos?client_id={}&v=20150603&client_secret={}'.format((venue_id,foursquare_client_id,foursquare_client_secret))
         result = json.loads(h.request(url,'GET')[1])
         #Grab the first image
         #if no image available, insert default image url
