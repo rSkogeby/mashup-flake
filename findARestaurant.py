@@ -4,12 +4,19 @@ import httplib2
 
 import sys
 import codecs
+
+from instance.config import getFoursquareClientId
+from instance.config import getFoursquareClientSecret
+from instance.config import getGoogleAPIKey
+
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 sys.stderr = codecs.getwriter('utf8')(sys.stderr)
 
-foursquare_client_id = '<CLIENT_ID>'
-foursquare_client_secret = '<CLIENT_SECRET>'
-google_api_key = '<API_KEY>'
+
+
+foursquare_client_id = getFoursquareClientId()
+foursquare_client_secret = getFoursquareClientSecret()
+google_api_key = getGoogleAPIKey()
 
 def getGeocodeLocation(inputString):
     #Replace Spaces with '+' in URL
